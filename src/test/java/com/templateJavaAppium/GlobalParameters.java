@@ -73,7 +73,6 @@ public class GlobalParameters {
     public static String AndroidProjectBrowserStack;
 
 
-
     private Properties properties;
 
     public GlobalParameters(){

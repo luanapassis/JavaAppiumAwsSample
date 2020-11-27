@@ -156,6 +156,7 @@ public class DriveFactory {
                     caps.setCapability("report.disable",true);
 
                     driver = new IOSDriver<MobileElement>(new URL(AppiumServer), caps);
+
                 }
             }
         }

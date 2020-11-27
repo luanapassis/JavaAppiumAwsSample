@@ -4,13 +4,14 @@ import com.templateJavaAppium.GlobalParameters;
 import com.templateJavaAppium.utils.DriveFactory;
 import com.templateJavaAppium.utils.ExtentReportUtils;
 import com.templateJavaAppium.utils.Utils;
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.MobileElement;
-import io.appium.java_client.TouchAction;
+import io.appium.java_client.*;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
+import io.appium.java_client.touch.LongPressOptions;
+import io.appium.java_client.touch.TapOptions;
 import io.appium.java_client.touch.WaitOptions;
+import io.appium.java_client.touch.offset.ElementOption;
 import io.appium.java_client.touch.offset.PointOption;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
@@ -46,7 +47,6 @@ public class PageBase {
         wait = new WebDriverWait (driver, GlobalParameters.TIMEOUT_DEFAULT);
     }
 
-
     protected  void hideKeyboard()
     {
         driver.hideKeyboard();
@@ -69,6 +69,7 @@ public class PageBase {
 
     //region Sincronização
     protected void waitLoadingScreen(MobileElement element){
+
         WebDriverException possibleWebDriverException = null;
         StopWatch timeOut = new StopWatch();
         timeOut.start();
@@ -248,8 +249,15 @@ public class PageBase {
                 .moveTo(PointOption.point(endX,endY)).release().perform();
         ExtentReportUtils.addTestInfo(3, "");
     }
+    protected void scrollUsingPressTouchActions(int startX,int startY, int endX, int endY) {
+        TouchAction actions = new TouchAction(driver);
+        actions.longPress(PointOption.point(startX,startY))
+                .moveTo(PointOption.point(endX,endY)).release().perform();
+        ExtentReportUtils.addTestInfo(3, "");
+    }
 
-    protected void longPress(MobileElement element) {
+
+    protected void longPressOld(MobileElement element) {
         waitForElement(element);
         TouchActions action = new TouchActions(driver);
         action.longPress(element);
@@ -257,18 +265,47 @@ public class PageBase {
         ExtentReportUtils.addTestInfo(3,"");
     }
 
-    protected void tap(MobileElement element){
+    protected void tapOld(MobileElement element){
         waitForElement(element);
         TouchActions action = new TouchActions(driver);
         action.singleTap(element);
         action.perform();
     }
-    protected void doubleTap(MobileElement element){
+
+    protected void tap(MobileElement element){
+        waitForElement(element);
+        TouchAction actions = new TouchAction(driver);
+        actions.tap(TapOptions.tapOptions().withElement(ElementOption.element(element)));
+        actions.perform();
+    }
+    protected void doubleTapOld(MobileElement element){
         waitForElement(element);
         TouchActions action = new TouchActions(driver);
         action.doubleTap(element);
         action.perform();
         ExtentReportUtils.addTestInfo(3, "");
+    }
+
+    protected void doubleTap(MobileElement element){
+        waitForElement(element);
+        TouchAction actions = new TouchAction(driver);
+        actions.tap(TapOptions.tapOptions().withElement(ElementOption.element(element)).withTapsCount(2));
+        actions.perform();
+    }
+
+    protected void doubleTapPress(int x, int y){
+    //protected void doubleTapPress(Point points){
+        TouchAction actions = new TouchAction(driver);
+        actions.press(PointOption.point(x, y)).release().perform()
+                .press(PointOption.point(x,y)).release().perform();
+
+    }
+
+    protected void longPress(MobileElement element){
+        waitForElement(element);
+        TouchAction actions = new TouchAction(driver);
+        actions.longPress(LongPressOptions.longPressOptions().withElement(ElementOption.element(element)));
+        actions.perform();
     }
 
     //endregion Mobile Element Methods
@@ -431,7 +468,6 @@ public class PageBase {
                 .waitAction(WaitOptions.waitOptions(Duration.ofSeconds(2)))
                 .moveTo(PointOption.point(x,endY)).release().perform();
     }
-
     public void swipeToLeft() {
         Dimension dim= driver.manage().window().getSize();
         int height=(int) dim.getHeight();
@@ -445,7 +481,24 @@ public class PageBase {
 
         TouchAction actions = new TouchAction(driver);
         actions.press(PointOption.point(startx , startY))
-                .waitAction(WaitOptions.waitOptions(Duration.ofSeconds(2)))
+                .waitAction(WaitOptions.waitOptions(Duration.ofSeconds(5)))
+                .moveTo(PointOption.point(endx, endY)).release().perform();
+
+    }
+    public void swipeToLeft2() {
+        Dimension dim= driver.manage().window().getSize();
+        int height=(int) dim.getHeight();
+        int width=(int) dim.getWidth();
+
+        //int startx=(int) (width - ( width * 0.1));
+        int startx=(int) (width - ( width * 0.01));
+        int endx=(int) ( width * 0.1);
+        int startY= (int) (height*0.80);
+        int endY=(int) (height*0.80);
+
+        TouchAction actions = new TouchAction(driver);
+        actions.press(PointOption.point(startx , startY))
+                .waitAction(WaitOptions.waitOptions(Duration.ofSeconds(3)))
                 .moveTo(PointOption.point(endx, endY)).release().perform();
     }
 
@@ -460,6 +513,8 @@ public class PageBase {
     protected MobileElement scrollToElementAndroid(String string){
         return ((AndroidDriver<MobileElement>) driver).findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().textContains(\""+string+"\").instance(0))");
     }
+
+
 
     public String takeScreenShot() {
 

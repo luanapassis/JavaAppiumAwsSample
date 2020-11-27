@@ -13,6 +13,7 @@ import sun.security.provider.ConfigFile;
 
 public class InputControlTests extends TestBase {
 
+    //region Declarações
     HomePage homePage;
     InputControlSwipeMenuPage inputControlSwipeMenuPage;
     TextFieldPage textFieldPage;
@@ -24,19 +25,25 @@ public class InputControlTests extends TestBase {
     TimePickerPage timePickerPage;
     SubmitButtonPage submitButtonPage;
     ReadToastMessage readToastMessage;
+    GesturesPage gesturesPage;
+    DataPickerPage dataPickerPage;
+    //endregion
+    //region atribuições a valores dos menus
+    private static String menuTexField ="Text Field";
+    private static String menuCheckBox ="Checkbox";
+    private static String menuRadioButtons ="Radio Buttons";
+    private static String menuToggleButton ="Toggle Button";
+    private static String menuSpinner ="Spinner";
+    private static String menuPullToRefresh ="Pull To Refresh";
+    private static String menuTimePicker ="Time Picker";
+    private static String menuDataPicker ="Date Picker";
+    private static String menuSubmitButton ="Submit Button";
+    private static String menuGestures ="Gestures";
+    //endregion
 
-    private static int menuTexField =0;
-    private static int menuCheckBox =1;
-    private static int menuRadioButtons =2;
-    private static int menuToggleButton =3;
-    private static int menuSpinner =4;
-    private static int menuPullToRefresh =5;
-    private static int menuTimePicker =6;
-    private static int menuDataPicker =7;
-    private static int menuSubmitButton =8;
-    private static int menuGestures =9;
+    //Casos de Testes
 
-    //menu texfield
+    //region Menu Text Field
     @Test
     public void verificaInteracaoTextField() {
 
@@ -53,7 +60,8 @@ public class InputControlTests extends TestBase {
 
         Assert.assertEquals(textoDigitado, textoRetornado);
     }
-    //Menu checkBox
+    //endregion
+    //region Menu checkBox
     @Test
     public void verificaInteracaoCheckBox() {
 
@@ -74,7 +82,8 @@ public class InputControlTests extends TestBase {
         Assert.assertEquals(checkStatusAntes, statusEsperadoAntes);
         Assert.assertEquals(checkStatusDepois, statusEsperadoDepois);
     }
-    //Menu Radio Button
+    //endregion
+    //region Menu Radio Button
     @Test
     public  void verificaSelecaoRadioButtonAmazon()
     {
@@ -126,9 +135,26 @@ public class InputControlTests extends TestBase {
 
         Assert.assertEquals(textoRetornado, textoEsperado);
     }
-    //Menu ToggleButton
+    //endregion
+    //region Menu ToggleButton
     @Test
-    public  void verificaToggleButton()
+    public  void verificaToggleButtonOff()
+    {
+        homePage = new HomePage();
+        inputControlSwipeMenuPage = new InputControlSwipeMenuPage();
+        toggleButtonPage = new ToggleButtonPage();
+
+        String textoEsperado = "OFF";
+
+        homePage.clicaMenuPrincipal();
+        homePage.clicaMenuInputControls();
+        inputControlSwipeMenuPage.swipe(menuToggleButton);
+        String textoRetornado = toggleButtonPage.retornaToggleState();
+
+        Assert.assertEquals(textoRetornado, textoEsperado);
+    }
+    @Test
+    public  void verificaToggleButtonOn()
     {
         homePage = new HomePage();
         inputControlSwipeMenuPage = new InputControlSwipeMenuPage();
@@ -147,9 +173,10 @@ public class InputControlTests extends TestBase {
         Assert.assertEquals(textoRetornadoAntes, textoEsperadoAntes);
         Assert.assertEquals(textoRetornadoDepois, textoEsperadoDepois);
     }
-    //Menu spinner
+    //endregion
+    //region Menu spinner
     @Test(dataProvider="testdata")
-    public  void selecionaOpcaospinner(String opcao, String resultadoEsperado) throws InterruptedException
+    public  void selecionaOpcaospinnerDataDriven(String opcao, String resultadoEsperado) throws InterruptedException
     {
         homePage = new HomePage();
         inputControlSwipeMenuPage = new InputControlSwipeMenuPage();
@@ -163,7 +190,8 @@ public class InputControlTests extends TestBase {
 
         Assert.assertEquals(opcaoRetornada, resultadoEsperado);
     }
-    //Menu pull to refresh
+    //endregion
+    //region Menu Pull to Refresh
     @Test
     public  void verificaHoraAposRefresh()
     {
@@ -179,8 +207,8 @@ public class InputControlTests extends TestBase {
 
         Assert.assertNotNull(horaAposRefresh);
     }
-
-    //menu Time Picker
+    //endregion
+    //region menu Time Picker
     @Test
     public  void verificaSelecaoDeHoraAM()
     {
@@ -194,9 +222,11 @@ public class InputControlTests extends TestBase {
         homePage.clicaMenuInputControls();
         inputControlSwipeMenuPage.swipe(menuTimePicker);
         timePickerPage.selecionaAm();
-        timePickerPage.clicarIconeTelcado();
-        timePickerPage.digitaHoras("12");
-        timePickerPage.digitaMinutos("00");
+        //timePickerPage.clicarIconeTelcado();
+        //timePickerPage.digitaHoras("12");
+        //timePickerPage.digitaMinutos("00");
+        timePickerPage.seleciona12HorasRelogio();
+        timePickerPage.seleciona00MinutosRelogio();
         String horaRetornada = timePickerPage.retornaHoraDiplay();
 
        Assert.assertEquals(horaRetornada, horaEsperada);
@@ -214,38 +244,154 @@ public class InputControlTests extends TestBase {
         homePage.clicaMenuInputControls();
         inputControlSwipeMenuPage.swipe(menuTimePicker);
         timePickerPage.selecionaPm();
-        timePickerPage.clicarIconeTelcado();
-        timePickerPage.digitaHoras("12");
-        timePickerPage.digitaMinutos("00");
+        //timePickerPage.clicarIconeTelcado();
+        //timePickerPage.digitaHoras("12");
+        //timePickerPage.digitaMinutos("00");
+        timePickerPage.seleciona12HorasRelogio();
+        timePickerPage.seleciona00MinutosRelogio();
         String horaRetornada = timePickerPage.retornaHoraDiplay();
 
         Assert.assertEquals(horaRetornada, horaEsperada);
     }
-//readToastMessage
-@Test
-public  void testeToast() throws TesseractException {
+    //endregion
+    //region Menu Submit Button
+    @Test
+    public  void verificaToastMessage() throws TesseractException {
 
-    homePage = new HomePage();
-    inputControlSwipeMenuPage = new InputControlSwipeMenuPage();
-    submitButtonPage = new SubmitButtonPage();
-    readToastMessage = new ReadToastMessage();
+        homePage = new HomePage();
+        inputControlSwipeMenuPage = new InputControlSwipeMenuPage();
+        submitButtonPage = new SubmitButtonPage();
+        readToastMessage = new ReadToastMessage();
 
-    readToastMessage.tst();
+        String mensagemEsperada = "Subimitted";
 
-    homePage.clicaMenuPrincipal();
-    homePage.clicaMenuInputControls();
-    inputControlSwipeMenuPage.swipe(menuSubmitButton);
-    String resultado = submitButtonPage.clicaSubmit();
-    Assert.assertNotNull(resultado);
-}
+        homePage.clicaMenuPrincipal();
+        homePage.clicaMenuInputControls();
+        inputControlSwipeMenuPage.swipe(menuSubmitButton);
+        //resultado possui o valor obtido no OCR da tela
+        String resultado = submitButtonPage.clicaSubmit();
+        Assert.assertTrue(resultado.contains(mensagemEsperada));
+    }
+    //endregion
+    //region Menu Gesture
+    @Test
+    public  void verificaGesturesOneTap()
+    {
+        homePage = new HomePage();
+        inputControlSwipeMenuPage = new InputControlSwipeMenuPage();
+        gesturesPage = new GesturesPage();
 
+        String gestureEperado1 = "Single Tap Up";
+        String gestureEperado2 = "Single tap confirmed";
 
+        homePage.clicaMenuPrincipal();
+        homePage.clicaMenuInputControls();
+        inputControlSwipeMenuPage.swipe(menuGestures);
+        gesturesPage.tapGestureField();
+        String valorRetornado = gesturesPage.retornaValorDysplay();
 
+        Assert.assertTrue(valorRetornado.contains(gestureEperado1));
+        Assert.assertTrue(valorRetornado.contains(gestureEperado2));
+    }
+    @Test
+    public  void verificaGestureLongPress()
+    {
+        homePage = new HomePage();
+        inputControlSwipeMenuPage = new InputControlSwipeMenuPage();
+        gesturesPage = new GesturesPage();
+
+        String gestureEperado1 = "Long Press";
+
+        homePage.clicaMenuPrincipal();
+        homePage.clicaMenuInputControls();
+        inputControlSwipeMenuPage.swipe(menuGestures);
+        gesturesPage.longPressTapGestureField();
+        String valorRetornado = gesturesPage.retornaValorDysplay();
+
+        Assert.assertTrue(valorRetornado.contains(gestureEperado1));
+    }
+
+    @Test
+    public  void verificaGestureDoubleTab()
+    {
+        homePage = new HomePage();
+        inputControlSwipeMenuPage = new InputControlSwipeMenuPage();
+        gesturesPage = new GesturesPage();
+
+        String gestureEperado1 = "Event within double tap";
+
+        homePage.clicaMenuPrincipal();
+        homePage.clicaMenuInputControls();
+        inputControlSwipeMenuPage.swipe(menuGestures);
+        gesturesPage.doubleTapGestureField();
+        String valorRetornado = gesturesPage.retornaValorDysplay();
+
+        Assert.assertTrue(valorRetornado.contains(gestureEperado1));
+    }
+
+    @Test
+    public  void verificaGestureScrolling()
+    {
+        homePage = new HomePage();
+        inputControlSwipeMenuPage = new InputControlSwipeMenuPage();
+        gesturesPage = new GesturesPage();
+
+        String gestureEperado1 = "Scroll";
+
+        homePage.clicaMenuPrincipal();
+        homePage.clicaMenuInputControls();
+        inputControlSwipeMenuPage.swipe(menuGestures);
+        gesturesPage.scrollingGestureField();
+        String valorRetornado = gesturesPage.retornaValorDysplay();
+
+        Assert.assertTrue(valorRetornado.contains(gestureEperado1));
+    }
+    //endregion
+    //region Menu Data Picker
+    @Test
+    public void verificaDataPicker2005()
+    {
+        homePage = new HomePage();
+        inputControlSwipeMenuPage = new InputControlSwipeMenuPage();
+        dataPickerPage = new DataPickerPage();
+
+        String anoDesejado = "2005";
+
+        homePage.clicaMenuPrincipal();
+        homePage.clicaMenuInputControls();
+        inputControlSwipeMenuPage.swipe(menuDataPicker);
+        dataPickerPage.clicaSelecaoAno();
+        dataPickerPage.retornaValorAnoMaior1994(anoDesejado);
+        String anoSelecionado = dataPickerPage.retornaAnoDoDisplay();
+
+        Assert.assertEquals(anoSelecionado , "7/5/2005");
+    }
+    @Test
+    public void verificaDataPicker1985()
+    {
+        homePage = new HomePage();
+        inputControlSwipeMenuPage = new InputControlSwipeMenuPage();
+        dataPickerPage = new DataPickerPage();
+
+        String anoDesejado = "1985";
+
+        homePage.clicaMenuPrincipal();
+        homePage.clicaMenuInputControls();
+        inputControlSwipeMenuPage.swipe(menuDataPicker);
+        dataPickerPage.clicaSelecaoAno();
+        dataPickerPage.retornaValorAnoMenor1994(anoDesejado);
+        String anoSelecionado = dataPickerPage.retornaAnoDoDisplay();
+
+        Assert.assertEquals(anoSelecionado , "7/5/1985");
+    }
+    //endregion
+
+    //region test data para data driven
     @DataProvider(name="testdata")
     public Object[][] testDataExample()
     {
 
-        ReadExcelFile configuration = new ReadExcelFile("C:\\Users\\Base2\\Desktop\\Ole\\Template Apium\\javaappiumtemplate-master\\src\\test\\resources\\testdata.xlsx");
+        ReadExcelFile configuration = new ReadExcelFile(System.getProperty("user.dir")+"\\src\\test\\resources\\testdata.xlsx");
         int rows = configuration.getRowCount(0);
 
         //2 é a quantidade de valores que será preenchido no for
@@ -258,7 +404,7 @@ public  void testeToast() throws TesseractException {
         }
         return signin_credentials;
     }
-
+    //endregion
 
 
 }

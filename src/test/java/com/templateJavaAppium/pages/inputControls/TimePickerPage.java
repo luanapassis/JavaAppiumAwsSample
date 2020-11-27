@@ -25,6 +25,13 @@ public class TimePickerPage extends PageBase {
     @AndroidFindBy(id = "android:id/pm_label")
     private MobileElement pmField;
 
+    @AndroidFindBy(xpath = "//*[@content-desc='12']")
+    private MobileElement dozeHorasRelogioField;
+
+    @AndroidFindBy(xpath = "//*[@content-desc='0']")
+    private MobileElement zeroMinutosRelogioField;
+
+
     public void clicarIconeTelcado()
     {
         click(keyboardIcon);
@@ -47,6 +54,16 @@ public class TimePickerPage extends PageBase {
     public void selecionaPm()
     {
         click(pmField);
+    }
+
+    public void seleciona12HorasRelogio()
+    {
+        click(dozeHorasRelogioField);
+    }
+    public void seleciona00MinutosRelogio()
+    {
+        waitLoadingScreen(zeroMinutosRelogioField);
+        click(zeroMinutosRelogioField);
     }
     public String retornaHoraDiplay()
     {
